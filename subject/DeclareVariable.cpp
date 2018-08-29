@@ -47,20 +47,20 @@ namespace goat {
 	}
 
 	State * DeclareVariable::StateImpl::next() {
-		if (decl->init != nullptr && init == nullptr) {
+		if (decl->init != nullptr && init.isEmpty()) {
 			return decl->init->createState(this);
 		}
 		else {
-			scope->objects.insert(Object::createIndex(decl->name), init ? init->toContainer() : *ObjectUndefined::getContainer());
+			scope->objects.insert(Object::createIndex(decl->name), !init.isEmpty() ? init : *ObjectUndefined::getContainer());
 			State *p = prev;
 			delete this;
 			return p;
 		}
 	}
 
-	void DeclareVariable::StateImpl::ret(Object *obj) {
-		if (decl->init != nullptr && init == nullptr) {
-			init = obj;
+	void DeclareVariable::StateImpl::ret(Container *value) {
+		if (decl->init != nullptr && init.isEmpty()) {
+			init = *value;
 		}
 		else {
 			throw NotImplemented();
@@ -68,9 +68,7 @@ namespace goat {
 	}
 
 	void DeclareVariable::StateImpl::trace() {
-		if (init) {
-			init->mark();
-		}
+		init.mark();
 	}
 
 	String DeclareVariable::toString() {
@@ -89,7 +87,7 @@ namespace goat {
 
 	State::DebugMode DeclareVariable::StateImpl::stop() {
 		if (decl->init != nullptr) {
-			return init ? SKIP : OVER;
+			return !init.isEmpty() ? SKIP : OVER;
 		}
 		return SKIP;
 	}

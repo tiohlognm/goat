@@ -106,7 +106,7 @@ namespace goat {
 		}
 	}
 
-	void Try::StateImpl::ret(Object *obj) {
+	void Try::StateImpl::ret(Container *value) {
 
 	}
 

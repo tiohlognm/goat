@@ -51,7 +51,7 @@ namespace goat {
 
 	TokenObject::StateImpl::StateImpl(State *_prev, TokenObject *_expr) : State(_prev), expr(_expr) {
 		item = expr->items->first;
-		objKey = nullptr;
+		objKey = Container::create();
 		result = new Object();
 		step = GET_LEFT;
 	}
@@ -61,14 +61,15 @@ namespace goat {
 		case GET_LEFT: {
 			if (!item) {
 				State *p = prev;
-				p->ret(result);
+				Container tmp = result->toContainer();
+				p->ret(&tmp);
 				delete this;
 				return p;
 			}
 			Pair *pair = item->toPair();
 			assert(pair != nullptr);
 			Identifier *ident = pair->left->toIdentifier();
-			objKey = nullptr;
+			objKey = Container::create();
 			if (ident) {
 				strKey = ident->name;
 				step = GET_RIGHT;
@@ -90,20 +91,20 @@ namespace goat {
 		}
 	}
 
-	void TokenObject::StateImpl::ret(Object *obj) {
+	void TokenObject::StateImpl::ret(Container *value) {
 		switch (step)
 		{
 		case GET_LEFT:
-			objKey = obj;
+			objKey = *value;
 			step = GET_RIGHT;
 			return;
 		case GET_RIGHT:
-			if (objKey) {
-				Container tmp = objKey->toContainer();
-				result->insert(&tmp, obj->toContainer());
+			if (!objKey.isEmpty()) {
+				result->insert(&objKey, *value);
+				//objKey = Container::create();
 			}
 			else {
-				result->insert(Object::createIndex(strKey), obj->toContainer());
+				result->insert(Object::createIndex(strKey), *value);
 			}
 			step = GET_LEFT;
 			return;
@@ -113,8 +114,7 @@ namespace goat {
 	}
 
 	void TokenObject::StateImpl::trace() {
-		if (objKey)
-			objKey->mark();
+		objKey.mark();
 		result->mark();
 	}
 

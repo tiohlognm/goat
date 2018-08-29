@@ -113,7 +113,7 @@ namespace goat {
 	public:
 		WideString prop;
 
-		CanNotReadPropertyOfUndefined(Object *_obj);
+		CanNotReadPropertyOfUndefined(Container *_ctr);
 		CanNotReadPropertyOfUndefined(String _name);
 		WideString toWideString() override;
 
@@ -128,7 +128,7 @@ namespace goat {
 	public:
 		WideString prop;
 
-		CanNotWritePropertyOfUndefined(Object *_obj);
+		CanNotWritePropertyOfUndefined(Container *_ctr);
 		CanNotWritePropertyOfUndefined(String _name);
 		WideString toWideString() override;
 
@@ -143,7 +143,7 @@ namespace goat {
 	public:
 		WideString prop;
 
-		CanNotWritePropertyOfLockedObject(Object *_obj);
+		CanNotWritePropertyOfLockedObject(Container *_ctr);
 		CanNotWritePropertyOfLockedObject(String _name);
 		WideString toWideString() override;
 

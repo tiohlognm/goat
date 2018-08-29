@@ -37,13 +37,13 @@ namespace goat {
 			};
 
 			InlineIf * expr;
-			Object *condition;
+			Container condition;
 			Step step;
 
-			StateImpl(State *_prev, InlineIf *_expr) : State(_prev), expr(_expr), condition(nullptr), step(CHECK_CONDITION) {
+			StateImpl(State *_prev, InlineIf *_expr) : State(_prev), expr(_expr), condition(Container::create()), step(CHECK_CONDITION) {
 			}
 			State * next() override;
-			void ret(Object *obj) override;
+			void ret(Container *value) override;
 			void trace() override;
 			Token * token() override;
 		};

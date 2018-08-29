@@ -80,4 +80,9 @@ namespace goat {
 		static OperatorOr __this;
 		return &__this;
 	}
+
+	Container * ObjectVoid::getContainer() {
+		static Container __container = getInstance()->toContainer();
+		return &__container;
+	}
 }

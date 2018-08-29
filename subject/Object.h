@@ -210,7 +210,7 @@ namespace goat {
 		if (handler != nullptr) {
 			return handler->equals(this, right);
 		}
-		return data.obj->equals(right);
+		return data.obj ? data.obj->equals(right) : false;
 	}
 
 	Object * Container::toObject() {
@@ -226,7 +226,7 @@ namespace goat {
 	}
 
 	ObjectString * Container::toObjectString() {
-		return handler == nullptr ? data.obj->toObjectString() : nullptr;
+		return handler == nullptr && data.obj != nullptr ? data.obj->toObjectString() : nullptr;
 	}
 
 	void Container::mark() {

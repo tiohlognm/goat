@@ -40,7 +40,7 @@ namespace goat {
 				: State(_prev), field(_field), left(nullptr), context(_context), executed(false) {
 			}
 			State *next() override;
-			void ret(Object *obj) override;
+			void ret(Container *value) override;
 			void trace() override;
 			Token * token() override;
 		};
@@ -56,7 +56,7 @@ namespace goat {
 				: State(_prev), value(_value), field(_field), left(nullptr), executed(false) {
 			}
 			State *next() override;
-			void ret(Object *obj) override;
+			void ret(Container *value) override;
 			void trace() override;
 			Token * token() override;
 		};

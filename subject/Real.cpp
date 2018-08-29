@@ -35,7 +35,8 @@ namespace goat {
 
 	State * Real::StateImpl::next() {
 		State *p = prev;
-		p->ret(new ObjectReal(expr->value));
+		Container tmp = (new ObjectReal(expr->value))->toContainer();
+		p->ret(&tmp);
 		delete this;
 		return p;
 	}

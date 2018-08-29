@@ -38,7 +38,8 @@ namespace goat {
 
 	State * Boolean::StateImpl::next() {
 		State *p = prev;
-		p->ret(new ObjectBoolean(expr->value));
+		Container tmp = (new ObjectBoolean(expr->value))->toContainer();
+		p->ret(&tmp);
 		delete this;
 		return p;
 	}

@@ -44,13 +44,13 @@ namespace goat {
 			Object *funcObj;
 			Token *arg;
 			Step step;
-			Object *retObj;
+			Container retObj;
 			Object *thisObj;
 			ObjectArray *arguments;
 
 			StateImpl(State *_prev, FunctionCall *_fcall);
 			State * next() override;
-			void ret(Object *obj) override;
+			void ret(Container *value) override;
 			void trace() override;
 			Token * token() override;
 			DebugMode stop() override;

@@ -40,13 +40,13 @@ namespace goat {
 			Index *expr;
 			Step step;
 			Object *left;
-			Object *index;
+			Container index;
 
 			StateImpl(State *_prev, Index *_expr)
-				: State(_prev), expr(_expr), step(GET_LEFT_OBJECT), left(nullptr), index(nullptr) {
+				: State(_prev), expr(_expr), step(GET_LEFT_OBJECT), left(nullptr), index(Container::create()) {
 			}
 			State *next() override;
-			void ret(Object *obj) override;
+			void ret(Container *value) override;
 			void trace() override;
 			Token * token() override;
 		};
@@ -63,13 +63,13 @@ namespace goat {
 			Index *expr;
 			Step step;
 			Object *left;
-			Object *index;
+			Container index;
 
 			StateAssignImpl(State *_prev, Container _value, Index *_expr)
-				: State(_prev), value(_value), expr(_expr), step(GET_LEFT_OBJECT), left(nullptr), index(nullptr) {
+				: State(_prev), value(_value), expr(_expr), step(GET_LEFT_OBJECT), left(nullptr), index(Container::create()) {
 			}
 			State *next() override;
-			void ret(Object *obj) override;
+			void ret(Container *value) override;
 			void trace() override;
 			Token * token() override;
 		};

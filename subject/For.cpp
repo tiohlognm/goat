@@ -49,7 +49,7 @@ namespace goat {
 		return new StateImpl(_prev, this);
 	}
 
-	For::StateImpl::StateImpl(State *_prev, For *_stmt) : State(_prev), stmt(_stmt), condition(nullptr), step(INIT) {
+	For::StateImpl::StateImpl(State *_prev, For *_stmt) : State(_prev), stmt(_stmt), condition(Container::create()), step(INIT) {
 		cloneScope();
 	}
 
@@ -83,9 +83,13 @@ namespace goat {
 			return stmt->init->createState(this);
 		case CHECK_CONDITION:
 			return stmt->condition->createState(this);
-		case EXECUTE:
-			if (condition->toObjectBoolean()->value) {
-				condition = nullptr;
+		case EXECUTE: {
+			bool condVal;
+			if (!condition.getBoolean(&condVal)) {
+				throw NotImplemented();
+			}
+			if (condVal) {
+				condition = Container::create();
 				step = INCREMENT;
 				return stmt->body->createState(this);
 			}
@@ -94,6 +98,7 @@ namespace goat {
 				delete this;
 				return p;
 			}
+		}
 		case INCREMENT:
 			step = CHECK_CONDITION;
 			return stmt->increment->createState(this);
@@ -102,10 +107,10 @@ namespace goat {
 		}
 	}
 
-	void For::StateImpl::ret(Object *obj) {
+	void For::StateImpl::ret(Container *value) {
 		switch (step) {
 		case CHECK_CONDITION:
-			condition = obj;
+			condition = *value;
 			step = EXECUTE;
 			break;
 		default:
@@ -114,9 +119,7 @@ namespace goat {
 	}
 
 	void For::StateImpl::trace() {
-		if (condition) {
-			condition->mark();
-		}
+		condition.mark();
 	}
 
 	String For::toString() {

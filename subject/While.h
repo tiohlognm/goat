@@ -37,14 +37,14 @@ namespace goat {
 			};
 
 			While *stmt;
-			Object *condition;
+			Container condition;
 			Step step;
 
-			StateImpl(State *_prev, While *_stmt) : State(_prev), stmt(_stmt), condition(nullptr), step(CHECK_CONDITION) {
+			StateImpl(State *_prev, While *_stmt) : State(_prev), stmt(_stmt), condition(Container::create()), step(CHECK_CONDITION) {
 			}
 			State * next() override;
 			State * execute() override;
-			void ret(Object *obj) override;
+			void ret(Container *value) override;
 			void trace() override;
 			Token *token() override;
 			DebugMode stop() override;

@@ -39,13 +39,13 @@ namespace goat {
 			TokenObject *expr;
 			Token *item;
 			String strKey;
-			Object *objKey;
+			Container objKey;
 			Object *result;
 			Step step;
 
 			StateImpl(State *_prev, TokenObject *_expr);
 			State *next() override;
-			void ret(Object *obj) override;
+			void ret(Container *value) override;
 			void trace() override;
 			Token *token() override;
 		};

@@ -85,14 +85,19 @@ namespace goat {
 		}
 	}
 
-	void DoWhile::StateImpl::ret(Object *obj) {
+	void DoWhile::StateImpl::ret(Container *value) {
 		switch (step) {
-		case CHECK_CONDITION:
-			if (obj->toObjectBoolean()->value)
+		case CHECK_CONDITION: {
+			bool cond;
+			if (!value->getBoolean(&cond)) {
+				throw NotImplemented();
+			}
+			if (cond)
 				step = EXECUTE;
 			else
 				step = DONE;
 			break;
+		}
 		default:
 			throw NotImplemented();
 		}

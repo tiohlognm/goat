@@ -42,7 +42,7 @@ namespace goat {
 			};
 
 			Switch *stmt;
-			Object *objSwitch;
+			Container objSwitch;
 			Case *block;
 			Step step;
 			Token *tok;
@@ -51,7 +51,7 @@ namespace goat {
 			StateImpl(State *_prev, Switch *_stmt);
 			State * next() override;
 			State * execute() override;
-			void ret(Object *obj) override;
+			void ret(Container *value) override;
 			void trace() override;
 			Token *token() override;
 		};

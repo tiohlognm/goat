@@ -37,7 +37,8 @@ namespace goat {
 
 	State * StaticString::StateImpl::next() {
 		State *p = prev;
-		p->ret(new ObjectString(expr->text));
+		Container tmp = (new ObjectString(expr->text))->toContainer();
+		p->ret(&tmp);
 		delete this;
 		return p;
 	}

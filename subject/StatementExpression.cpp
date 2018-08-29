@@ -54,7 +54,7 @@ namespace goat {
 		}
 	}
 
-	void StatementExpression::StateImpl::ret(Object *obj) {
+	void StatementExpression::StateImpl::ret(Container *value) {
 		// just ignore the object
 	}
 

@@ -46,7 +46,8 @@ namespace goat {
 			return throw_(r);
 		}
 		State *p = prev;
-		p->ret(r);
+		Container tmp = r->toContainer();
+		p->ret(&tmp);
 		delete this;
 		return p;
 	}

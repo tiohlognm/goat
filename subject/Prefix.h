@@ -38,14 +38,14 @@ namespace goat {
 			};
 
 			Prefix *expr;
-			Object *right;
+			Container right;
 			Step step;
 
 			StateImpl(State *_prev, Prefix *_expr) :
-				State(_prev), expr(_expr), right(nullptr), step(GET_RIGHT) {
+				State(_prev), expr(_expr), right(Container::create()), step(GET_RIGHT) {
 			}
 			State *next() override;
-			void ret(Object *obj) override;
+			void ret(Container *object) override;
 			void trace() override;
 			Token * token() override;
 		};

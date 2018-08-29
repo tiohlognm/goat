@@ -37,7 +37,8 @@ namespace goat {
 
 	State * Char::StateImpl::next() {
 		State *p = prev;
-		p->ret(new ObjectChar(expr->value));
+		Container tmp = (new ObjectChar(expr->value))->toContainer();
+		p->ret(&tmp);
 		delete this;
 		return p;
 	}

@@ -35,7 +35,8 @@ namespace goat {
 
 	State * Integer::StateImpl::next() {
 		State *p = prev;
-		p->ret(new ObjectInteger(expr->value));
+		Container tmp = (new ObjectInteger(expr->value))->toContainer();
+		p->ret(&tmp);
 		delete this;
 		return p;
 	}

@@ -46,11 +46,11 @@ namespace goat {
 
 	State * Assign::StateImpl::next() {
 		if (!executed) {
-			if (!right) {
+			if (right.isEmpty()) {
 				return expr->right->createState(this);
 			}
 			executed = true;
-			return expr->left->createStateAssign(this, right->toContainer());
+			return expr->left->createStateAssign(this, right);
 		}
 		else {
 			State *p = prev;
@@ -59,19 +59,17 @@ namespace goat {
 		}
 	}
 
-	void Assign::StateImpl::ret(Object *obj) {
-		if (!right) {
-			right = obj;
+	void Assign::StateImpl::ret(Container *value) {
+		if (right.isEmpty()) {
+			right = *value;
 		}
 		else {
-			prev->ret(obj);
+			prev->ret(value);
 		}
 	}
 
 	void Assign::StateImpl::trace() {
-		if (right) {
-			right->mark();
-		}
+		right.mark();
 	}
 
 	String Assign::toString() {

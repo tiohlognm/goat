@@ -111,20 +111,22 @@ namespace goat {
 			else {
 				step = DONE;
 			}
-		case DONE:
+		case DONE: {
 			State *p = prev;
-			p->ret(retObj);
+			Container tmp = retObj->toContainer();
+			p->ret(&tmp);
 			delete this;
 			return p;
+			}
 		}
 		throw NotImplemented();
 	}
 
-	void New::StateImpl::ret(Object *obj) {
+	void New::StateImpl::ret(Container *value) {
 		switch (step) {
 			case CREATE_OBJECT: {
 				step = INIT_OBJECT;
-				Object *proto = obj;
+				Object *proto = value->toObject();
 				if (proto->toObjectUndefined()) {
 					return;
 				}
@@ -148,7 +150,7 @@ namespace goat {
 				return;
 			}
 			case GET_ARGUMENTS:
-				arguments->vector.pushBack(obj->toContainer());
+				arguments->vector.pushBack(*value);
 				return;
 			case DONE:
 				// ignore return object from constructor

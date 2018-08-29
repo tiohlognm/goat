@@ -36,7 +36,7 @@ namespace goat {
 
 	State * Undefined::StateImpl::next() {
 		State *p = prev;
-		p->ret(ObjectUndefined::getInstance());
+		p->ret(ObjectUndefined::getContainer());
 		delete this;
 		return p;
 	}

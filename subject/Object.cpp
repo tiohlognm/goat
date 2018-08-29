@@ -585,7 +585,7 @@ namespace goat {
 			}
 			State *next() override;
 			void trace() override;
-			void ret(Object *obj) override;
+			void ret(Container *value) override;
 			Token * token() override;
 		};
 
@@ -651,7 +651,8 @@ namespace goat {
 				cloned->proto[0] = proto;
 			}
 			State *p = prev;
-			p->ret(cloned);
+			Container tmp = cloned->toContainer();
+			p->ret(&tmp);
 			delete this;
 			return p;
 		}
@@ -670,8 +671,8 @@ namespace goat {
 		return nullptr;
 	}
 
-	void Inherit::StateImpl::ret(Object *obj) {
-		cloned = obj;
+	void Inherit::StateImpl::ret(Container *value) {
+		cloned = value->toObject();
 	}
 
 
@@ -775,7 +776,7 @@ namespace goat {
 			}
 			State *next() override;
 			void trace() override;
-			void ret(Object *obj) override;
+			void ret(Container *value) override;
 			Token * token() override;
 		};
 
@@ -829,7 +830,8 @@ namespace goat {
 		case DONE: {
 			State *p = prev;
 			cloned->status |= Object::LOCKED;
-			p->ret(cloned);
+			Container tmp = cloned->toContainer();
+			p->ret(&tmp);
 			delete this;
 			return p;
 		}
@@ -848,8 +850,8 @@ namespace goat {
 		return nullptr;
 	}
 
-	void Lock::StateImpl::ret(Object *obj) {
-		cloned = obj;
+	void Lock::StateImpl::ret(Container *value) {
+		cloned = value->toObject();
 	}
 
 

@@ -39,6 +39,7 @@ namespace goat {
 		WideString toWideString() override;
 		bool equals(Container *ctr) override;
 		static Object *getInstance();
+		static Container *getContainer();
 
 		class OperatorNot : public ObjectBuiltIn {
 		public:

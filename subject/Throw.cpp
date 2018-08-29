@@ -54,8 +54,8 @@ namespace goat {
 		}
 	}
 
-	void Throw::StateImpl::ret(Object *obj) {
-		this->obj = obj;
+	void Throw::StateImpl::ret(Container *value) {
+		this->obj = value->toObject();
 	}
 
 	void Throw::StateImpl::trace() {

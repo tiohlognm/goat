@@ -63,14 +63,15 @@ namespace goat {
 		}
 		else {
 			State *p = prev;
-			p->ret(result);
+			Container tmp = result->toContainer();
+			p->ret(&tmp);
 			delete this;
 			return p;
 		}
 	}
 
-	void TokenArray::StateImpl::ret(Object *obj) {
-		result->vector.pushBack(obj->toContainer());
+	void TokenArray::StateImpl::ret(Container *value) {
+		result->vector.pushBack(*value);
 	}
 
 	void TokenArray::StateImpl::trace() {

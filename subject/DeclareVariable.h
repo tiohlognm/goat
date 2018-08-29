@@ -33,12 +33,12 @@ namespace goat {
 		class StateImpl : public State {
 		public:
 			DeclareVariable *decl;
-			Object *init;
+			Container init;
 
-			StateImpl(State *_prev, DeclareVariable *_decl) : State(_prev), decl(_decl), init(nullptr) {
+			StateImpl(State *_prev, DeclareVariable *_decl) : State(_prev), decl(_decl), init(Container::create()) {
 			}
 			State * next() override;
-			void ret(Object *obj) override;
+			void ret(Container *value) override;
 			void trace() override;
 			Token * token() override;
 			DebugMode stop() override;

@@ -54,18 +54,16 @@ namespace goat {
 			return return_(*ObjectUndefined::getContainer());
 		}
 		else {
-			return return_(obj->toContainer());
+			return return_(retVal);
 		}
 	}
 
-	void Return::StateImpl::ret(Object *obj) {
-		this->obj = obj;
+	void Return::StateImpl::ret(Container *value) {
+		retVal = *value;
 	}
 
 	void Return::StateImpl::trace() {
-		if (obj) {
-			obj->mark();
-		}
+		retVal.mark();
 	}
 
 	String Return::toString() {

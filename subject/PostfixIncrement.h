@@ -39,15 +39,15 @@ namespace goat {
 			};
 
 			PostfixIncrement *expr;
-			Object *oldValue,
-				*newValue;
+			Container oldValue,
+				newValue;
 			Step step;
 
 			StateImpl(State *_prev, PostfixIncrement *_expr) :
-				State(_prev), expr(_expr), oldValue(nullptr), newValue(nullptr), step(GET_LEFT) {
+				State(_prev), expr(_expr), oldValue(Container::create()), newValue(Container::create()), step(GET_LEFT) {
 			}
 			State *next() override;
-			void ret(Object *obj) override;
+			void ret(Container *value) override;
 			void trace() override;
 			Token * token() override;
 		};

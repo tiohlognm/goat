@@ -36,7 +36,13 @@ namespace goat {
 
 	State * This::StateImpl::next() {
 		State *p = prev;
-		p->ret(scope->this_ ? scope->this_ : ObjectUndefined::getInstance());
+		if (scope->this_) {
+			Container tmp =  scope->this_->toContainer();
+			p->ret(&tmp);
+		}
+		else {
+			p->ret(ObjectUndefined::getContainer());
+		}
 		delete this;
 		return p;
 	}

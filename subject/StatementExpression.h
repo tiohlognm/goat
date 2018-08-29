@@ -37,7 +37,7 @@ namespace goat {
 			StateImpl(State *_prev, StatementExpression *_stexpr) : State(_prev), stexpr(_stexpr), executed(false) {
 			}
 			State * next() override;
-			void ret(Object *obj) override;
+			void ret(Container *value) override;
 			Token * token() override;
 			DebugMode stop() override;
 		};

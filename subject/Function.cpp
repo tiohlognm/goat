@@ -72,7 +72,7 @@ namespace goat {
 			return throw_(thru);
 		case RETURN: {
 			State *p = prev;
-			prev->ret(thru.toObject());
+			prev->ret(&thru);
 			delete this;
 			return p;
 		}
@@ -94,8 +94,8 @@ namespace goat {
 		}
 	}
 
-	void Function::StateImpl::ret(Object *obj) {
-		prev->ret(obj);
+	void Function::StateImpl::ret(Container *value) {
+		prev->ret(value);
 	}
 
 	String Function::toString() {

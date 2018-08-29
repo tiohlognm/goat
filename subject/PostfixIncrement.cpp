@@ -55,14 +55,18 @@ namespace goat {
 		case GET_LEFT:
 			return expr->left->createState(this);
 		case EXECUTE: {
-			if (!oldValue) {
+			if (oldValue.isEmpty() || oldValue.isPrimitive()) {
 				return throw_(new CanNotReadOperatorOfUndefined(expr->oper->value));
 			}
-			Container *ctr = oldValue->find(expr->operIndex);
-			if (ctr->isPrimitive()) {
-				// TODO: implement
+			if (oldValue.isPrimitive()) {
+				throw NotImplemented();
 			}
 			else {
+				Object *oldObj = oldValue.data.obj;
+				Container *ctr = oldObj->find(expr->operIndex);
+				if (ctr->isPrimitive()) {
+					throw NotImplemented();
+				}
 				Object *obj = ctr->data.obj;
 				if (obj->toObjectUndefined()) {
 					return throw_(new OperatorIsNotDefined(expr->oper->value));
@@ -70,7 +74,7 @@ namespace goat {
 				ObjectFunction *of = obj->toObjectFunction();
 				if (of) {
 					changeScope(of->context->clone());
-					scope->this_ = oldValue;
+					scope->this_ = oldObj;
 					scope->arguments = new ObjectArray();
 					scope->objects.insert(Resource::i_arguments(), scope->arguments->toContainer());
 					if (of->function->args) {
@@ -87,15 +91,15 @@ namespace goat {
 				ObjectBuiltIn *obi = obj->toObjectBuiltIn();
 				if (obi) {
 					cloneScope();
-					scope->this_ = oldValue;
+					scope->this_ = oldObj;
 					return obi->createState(this);
 				}
+				return throw_(new IsNotAFunction(expr->oper->value));
 			}
-			return throw_(new IsNotAFunction(expr->oper->value));
 		}
 		case SET_LEFT:
 			step = DONE;
-			return expr->left->createStateAssign(this, newValue->toContainer());
+			return expr->left->createStateAssign(this, newValue);
 		case DONE: {
 			State * p = prev;
 			delete this;
@@ -106,15 +110,15 @@ namespace goat {
 		}
 	}
 
-	void PostfixIncrement::StateImpl::ret(Object *obj) {
+	void PostfixIncrement::StateImpl::ret(Container *value) {
 		switch (step) {
 		case GET_LEFT:
-			oldValue = obj;
-			prev->ret(obj);
+			oldValue = *value;
+			prev->ret(value);
 			step = EXECUTE;
 			return;
 		case EXECUTE:
-			newValue = obj;
+			newValue = *value;
 			step = SET_LEFT;
 			return;
 		case DONE:
@@ -125,12 +129,8 @@ namespace goat {
 	}
 
 	void PostfixIncrement::StateImpl::trace() {
-		if (oldValue) {
-			oldValue->mark();
-		}
-		if (newValue) {
-			newValue->mark();
-		}
+		oldValue.mark();
+		newValue.mark();
 	}
 
 	String PostfixIncrement::toString() {

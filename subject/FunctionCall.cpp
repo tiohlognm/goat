@@ -80,7 +80,7 @@ namespace goat {
 		arg = fcall->args->first;
 		funcObj = nullptr;
 		step = GET_FUNC_OBJECT;
-		retObj = nullptr;
+		retObj = Container::create();
 		thisObj = nullptr;
 		arguments = new ObjectArray();
 		level++;
@@ -105,7 +105,7 @@ namespace goat {
 			if (funcObj->toObjectUndefined()) {
 				if (fcall->guard) {
 					State *p = prev;
-					p->ret(ObjectUndefined::getInstance());
+					p->ret(ObjectUndefined::getContainer());
 					delete this;
 					return p;
 				}
@@ -156,7 +156,7 @@ namespace goat {
 		}
 		case DONE: {
 			State *p = prev;
-			p->ret(retObj ? retObj : ObjectUndefined::getInstance());
+			p->ret(!retObj.isEmpty() ? &retObj : ObjectUndefined::getContainer());
 			delete this;
 			return p;
 		}
@@ -165,17 +165,17 @@ namespace goat {
 		}
 	}
 
-	void FunctionCall::StateImpl::ret(Object *obj) {
+	void FunctionCall::StateImpl::ret(Container *value) {
 		switch (step) {
 		case GET_FUNC_OBJECT:
-			funcObj = obj;
+			funcObj = value->toObject();
 			step = GET_ARGUMENTS;
 			return;
 		case GET_ARGUMENTS:
-			arguments->vector.pushBack(obj->toContainer());
+			arguments->vector.pushBack(*value);
 			return;
 		case DONE:
-			retObj = obj;
+			retObj = *value;
 			return;
 		default:
 			throw NotImplemented();
@@ -186,9 +186,7 @@ namespace goat {
 		if (funcObj) {
 			funcObj->mark();
 		}
-		if (retObj) {
-			retObj->mark();
-		}
+		retObj.mark();
 		if (thisObj) {
 			thisObj->mark();
 		}

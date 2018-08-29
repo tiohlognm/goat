@@ -58,7 +58,7 @@ namespace goat {
 	}
 
 	Switch::StateImpl::StateImpl(State *_prev, Switch *_stmt) : State(_prev), stmt(_stmt) {
-		objSwitch = nullptr;
+		objSwitch = Container::create();
 		block = stmt->blocks->count > 0 ? stmt->blocks->first->toCase() : nullptr;
 		step = GET_OBJECT;
 		tok = nullptr;
@@ -127,15 +127,14 @@ namespace goat {
 		}
 	}
 
-	void Switch::StateImpl::ret(Object *obj) {
+	void Switch::StateImpl::ret(Container *value) {
 		switch (step) {
 			case GET_OBJECT:
-				objSwitch = obj;
+				objSwitch = *value;
 				step = COMPARE_OBJECT;
 				return;
 			case COMPARE_OBJECT: {
-				Container tmp = obj->toContainer();
-				if (objSwitch->equals(&tmp)) {
+				if (objSwitch.equals(value)) {
 					tok = block->tokens->first;
 					step = EXECUTE;
 				}
@@ -161,9 +160,7 @@ namespace goat {
 	}
 
 	void Switch::StateImpl::trace() {
-		if (objSwitch) {
-			objSwitch->mark();
-		}
+		objSwitch.mark();
 	}
 
 	String Switch::toString() {

@@ -56,14 +56,18 @@ namespace goat {
 			return expr->right->createState(this);
 		case EXECUTE: {
 			step = DONE;
-			if (!right) {
+			if (right.isEmpty() || right.isUndefined()) {
 				return throw_(new CanNotReadOperatorOfUndefined(expr->oper->value));
 			}
-			Container *ctr = right->find(expr->operIndex);
-			if (ctr->isPrimitive()) {
-				// TODO: implement
+			if (right.isPrimitive()) {
+				throw NotImplemented();
 			}
 			else {
+				Object *robj = right.data.obj;
+				Container *ctr = robj->find(expr->operIndex);
+				if (ctr->isPrimitive()) {
+					throw NotImplemented();
+				}
 				Object *obj = ctr->data.obj;
 				if (obj->toObjectUndefined()) {
 					return throw_(new OperatorIsNotDefined(expr->oper->value));
@@ -71,7 +75,7 @@ namespace goat {
 				ObjectFunction *of = obj->toObjectFunction();
 				if (of) {
 					changeScope(of->context->clone());
-					scope->this_ = right;
+					scope->this_ = robj;
 					scope->arguments = new ObjectArray();
 					scope->objects.insert(Resource::i_arguments(), scope->arguments->toContainer());
 					if (of->function->args) {
@@ -88,11 +92,11 @@ namespace goat {
 				ObjectBuiltIn *obi = obj->toObjectBuiltIn();
 				if (obi) {
 					cloneScope();
-					scope->this_ = right;
+					scope->this_ = robj;
 					return obi->createState(this);
 				}
+				return throw_(new IsNotAFunction(expr->oper->value));
 			}
-			return throw_(new IsNotAFunction(expr->oper->value));
 		}
 		case DONE:
 			State * p = prev;
@@ -102,14 +106,14 @@ namespace goat {
 		throw NotImplemented();
 	}
 
-	void Prefix::StateImpl::ret(Object *obj) {
+	void Prefix::StateImpl::ret(Container *value) {
 		switch (step) {
 		case GET_RIGHT:
-			right = obj;
+			right = *value;
 			step = EXECUTE;
 			return;
 		case DONE:
-			prev->ret(obj);
+			prev->ret(value);
 			return;
 		default:
 			throw NotImplemented();
@@ -117,9 +121,7 @@ namespace goat {
 	}
 
 	void Prefix::StateImpl::trace() {
-		if (right) {
-			right->mark();
-		}
+		right.mark();
 	}
 
 	String Prefix::toString() {

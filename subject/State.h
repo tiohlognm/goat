@@ -63,7 +63,7 @@ namespace goat {
 	protected:
 		virtual State *next() = 0;
 	public:
-		virtual void ret(Object *obj);
+		virtual void ret(Container *value);
 		void mark();
 		virtual void trace();
 		inline void changeScope(Scope *_scope);

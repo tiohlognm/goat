@@ -57,30 +57,34 @@ namespace goat {
 		case GET_LEFT:
 			return expr->left->createState(this);
 		case GET_RIGHT:
-			if (!left) {
+			if (left.isEmpty()) {
 				return throw_(new CanNotReadOperatorOfUndefined(expr->oper->value));
 			}
 			return expr->right->createState(this);
 		case EXECUTE: {
 			step = DONE;
-			Container *ctr = left->find(expr->operIndex);
-			if (ctr->isUndefined()) {
-				return throw_(new OperatorIsNotDefined(expr->oper->value));
-			}
-			if (ctr->isPrimitive()) {
-				// TODO: implement
+			if (left.isPrimitive()) {
+				throw NotImplemented();
 			}
 			else {
+				Object *lobj = left.data.obj;
+				Container *ctr = lobj->find(expr->operIndex);
+				if (ctr->isUndefined()) {
+					return throw_(new OperatorIsNotDefined(expr->oper->value));
+				}
+				if (ctr->isPrimitive()) {
+					throw NotImplemented();
+				}
 				Object *obj = ctr->data.obj;
 				ObjectFunction *of = obj->toObjectFunction();
 				if (of) {
 					changeScope(of->context->clone());
-					scope->this_ = left;
+					scope->this_ = lobj;
 					scope->arguments = new ObjectArray();
-					scope->arguments->vector.pushBack(right->toContainer());
+					scope->arguments->vector.pushBack(right);
 					scope->objects.insert(Resource::i_arguments(), scope->arguments->toContainer());
 					scope->proto.pushBack(scope->proto[0]);
-					scope->proto[0] = left;
+					scope->proto[0] = lobj;
 					if (of->function->args) {
 						unsigned int i = 0, count = scope->arguments->vector.len();
 						Token *name = of->function->args->first;
@@ -95,13 +99,13 @@ namespace goat {
 				ObjectBuiltIn *obi = obj->toObjectBuiltIn();
 				if (obi) {
 					cloneScope();
-					scope->this_ = left;
+					scope->this_ = lobj;
 					scope->arguments = new ObjectArray();
-					scope->arguments->vector.pushBack(right->toContainer());
+					scope->arguments->vector.pushBack(right);
 					return obi->createState(this);
 				}
+				return throw_(new IsNotAFunction(expr->oper->value));
 			}
-			return throw_(new IsNotAFunction(expr->oper->value));
 		}
 		case DONE:
 			State *p = prev;
@@ -111,18 +115,18 @@ namespace goat {
 		throw NotImplemented();
 	}
 
-	void Binary::StateImpl::ret(Object *obj) {
+	void Binary::StateImpl::ret(Container *value) {
 		switch (step) {
 		case GET_LEFT:
-			left = obj;
+			left = *value;
 			step = GET_RIGHT;
 			return;
 		case GET_RIGHT:
-			right = obj;
+			right = *value;
 			step = EXECUTE;
 			return;
 		case DONE:
-			prev->ret(obj);
+			prev->ret(value);
 			return;
 		default:
 			throw NotImplemented();
@@ -130,12 +134,8 @@ namespace goat {
 	}
 
 	void Binary::StateImpl::trace() {
-		if (left) {
-			left->mark();
-		}
-		if (right) {
-			right->mark();
-		}
+		left.mark();
+		right.mark();
 	}
 
 	String Binary::toString() {

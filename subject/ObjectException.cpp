@@ -168,8 +168,8 @@ namespace goat {
 	}
 
 
-	CanNotReadPropertyOfUndefined::CanNotReadPropertyOfUndefined(Object *_obj) {
-		prop = _obj->toWideString();
+	CanNotReadPropertyOfUndefined::CanNotReadPropertyOfUndefined(Container *_ctr) {
+		prop = _ctr->toWideString();
 		proto.pushBack(Proto::getInstance());
 	}
 
@@ -193,8 +193,8 @@ namespace goat {
 	}
 
 
-	CanNotWritePropertyOfUndefined::CanNotWritePropertyOfUndefined(Object *_obj) {
-		prop = _obj->toWideString();
+	CanNotWritePropertyOfUndefined::CanNotWritePropertyOfUndefined(Container *_ctr) {
+		prop = _ctr->toWideString();
 		proto.pushBack(Proto::getInstance());
 	}
 
@@ -218,8 +218,8 @@ namespace goat {
 	}
 
 
-	CanNotWritePropertyOfLockedObject::CanNotWritePropertyOfLockedObject(Object *_obj) {
-		prop = _obj->toWideString();
+	CanNotWritePropertyOfLockedObject::CanNotWritePropertyOfLockedObject(Container *_ctr) {
+		prop = _ctr->toWideString();
 		proto.pushBack(Proto::getInstance());
 	}
 

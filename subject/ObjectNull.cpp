@@ -57,4 +57,9 @@ namespace goat {
 		static ObjectNull __this;
 		return &__this;
 	}
+
+	Container * ObjectNull::getContainer() {
+		static Container __container = getInstance()->toContainer();
+		return &__container;
+	}
 }

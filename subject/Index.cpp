@@ -65,46 +65,47 @@ namespace goat {
 			if (left->toObjectUndefined() == nullptr) {
 				ObjectArray *objArr = left->toObjectArray();
 				if (objArr) {
-					ObjectInteger *intIdx = index ? index->toObjectInteger() : nullptr;
-					if (!intIdx) {
+					lint intIdx;
+					if (!index.getInteger(&intIdx)) {
 						return throw_(new IncorrectIndex());
 					}
-					if (intIdx->value < 0 || intIdx->value >= objArr->vector.len()) {
+					if (intIdx < 0 || intIdx >= objArr->vector.len()) {
 						return throw_(new OutOfBounds());
 					}
-					Object *value = objArr->vector[(unsigned int)intIdx->value].toObject();
 					State *p = prev;
-					p->ret(value);
+					p->ret(&objArr->vector[(unsigned int)intIdx]);
 					delete this;
 					return p;
 				}
 				ObjectByteArray *objByteArr = left->toObjectByteArray();
 				if (objByteArr) {
-					ObjectInteger *intIdx = index ? index->toObjectInteger() : nullptr;
-					if (!intIdx) {
+					lint intIdx;
+					if (!index.getInteger(&intIdx)) {
 						return throw_(new IncorrectIndex());
 					}
-					if (intIdx->value < 0 || intIdx->value >= objByteArr->vector.len()) {
+					if (intIdx < 0 || intIdx >= objByteArr->vector.len()) {
 						return throw_(new OutOfBounds());
 					}
-					Object *value = new ObjectInteger(objByteArr->vector[(unsigned int)intIdx->value]);
+					Object *value = new ObjectInteger(objByteArr->vector[(unsigned int)intIdx]);
+					Container tmp = value->toContainer();
 					State *p = prev;
-					p->ret(value);
+					p->ret(&tmp);
 					delete this;
 					return p;
 				}
 				ObjectString *objStr = left->toObjectString();
 				if (objStr) {
-					ObjectInteger *intIdx = index ? index->toObjectInteger() : nullptr;
-					if (!intIdx) {
+					lint intIdx;
+					if (!index.getInteger(&intIdx)) {
 						return throw_(new IncorrectIndex());
 					}
-					if (intIdx->value < 0 || intIdx->value >= objStr->value.len()) {
+					if (intIdx < 0 || intIdx >= objStr->value.len()) {
 						return throw_(new OutOfBounds());
 					}
-					ObjectChar *value = new ObjectChar(objStr->value[(unsigned int)intIdx->value]);
+					ObjectChar *value = new ObjectChar(objStr->value[(unsigned int)intIdx]);
+					Container tmp = value->toContainer();
 					State *p = prev;
-					p->ret(value);
+					p->ret(&tmp);
 					delete this;
 					return p;
 				}
@@ -113,25 +114,24 @@ namespace goat {
 				{
 					State *p = prev;
 					// TODO: review
-					Container tmp = index->toContainer();
-					p->ret(left->find(&tmp)->toObject());
+					p->ret(left->find(&index));
 					delete this;
 					return p;
 				}
 			}
-			return throw_(new CanNotReadPropertyOfUndefined(index));
+			return throw_(new CanNotReadPropertyOfUndefined(&index));
 		}
 		throw NotImplemented();
 	}
 
-	void Index::StateImpl::ret(Object *obj) {
+	void Index::StateImpl::ret(Container *value) {
 		switch (step) {
 		case GET_LEFT_OBJECT:
-			left = obj;
+			left = value->toObject();
 			step = GET_INDEX_OBJECT;
 			return;
 		case GET_INDEX_OBJECT:
-			index = obj;
+			index = *value;
 			step = DONE;
 			return;
 		default:
@@ -143,9 +143,7 @@ namespace goat {
 		if (left) {
 			left->mark();
 		}
-		if (index) {
-			index->mark();
-		}
+		index.mark();
 	}
 
 	Token * Index::StateImpl::token() {
@@ -161,39 +159,39 @@ namespace goat {
 		case DONE:
 			if (left->toObjectUndefined() == nullptr) {
 				if ((left->status & Object::LOCKED) != 0) {
-					return throw_(new CanNotWritePropertyOfLockedObject(index));
+					return throw_(new CanNotWritePropertyOfLockedObject(&index));
 				}
 				ObjectArray *objArr = left->toObjectArray();
 				if (objArr) {
-					ObjectInteger *intIdx = index ? index->toObjectInteger() : nullptr;
-					if (!intIdx) {
+					lint intIdx;
+					if (!index.getInteger(&intIdx)) {
 						return throw_(new IncorrectIndex());
 					}
-					if (intIdx->value < 0 || intIdx->value >= objArr->vector.len()) {
+					if (intIdx < 0 || intIdx >= objArr->vector.len()) {
 						return throw_(new OutOfBounds());
 					}
-					objArr->vector[(unsigned int)intIdx->value] = value;
+					objArr->vector[(unsigned int)intIdx] = value;
 					State *p = prev;
-					p->ret(value.toObject());
+					p->ret(&value);
 					delete this;
 					return p;
 				}
 				ObjectByteArray *objByteArr = left->toObjectByteArray();
 				if (objByteArr) {
-					ObjectInteger *intIdx = index ? index->toObjectInteger() : nullptr;
-					if (!intIdx) {
+					lint intIdx;
+					if (!index.getInteger(&intIdx)) {
 						return throw_(new IncorrectIndex());
 					}
-					if (intIdx->value < 0 || intIdx->value >= objByteArr->vector.len()) {
+					if (intIdx < 0 || intIdx >= objByteArr->vector.len()) {
 						return throw_(new OutOfBounds());
 					}
 					lint intVal;
 					if (!value.getInteger(&intVal) || intVal < 0 || intVal > 255) {
 						return throw_(new IllegalArgument());
 					}
-					objByteArr->vector[(unsigned int)intIdx->value] = (unsigned char)intVal;
+					objByteArr->vector[(unsigned int)intIdx] = (unsigned char)intVal;
 					State *p = prev;
-					p->ret(value.toObject());
+					p->ret(&value);
 					delete this;
 					return p;
 				}
@@ -203,27 +201,26 @@ namespace goat {
 					return throw_(new IncorrectIndex());
 				}
 				{
-					Container tmp = index->toContainer();
-					left->insert(&tmp, value);
+					left->insert(&index, value);
 					State *p = prev;
-					p->ret(value.toObject());
+					p->ret(&value);
 					delete this;
 					return p;
 				}
 			}
-			return throw_(new CanNotWritePropertyOfUndefined(index));
+			return throw_(new CanNotWritePropertyOfUndefined(&index));
 		}
 		throw NotImplemented();
 	}
 
-	void Index::StateAssignImpl::ret(Object *obj) {
+	void Index::StateAssignImpl::ret(Container *value) {
 		switch (step) {
 		case GET_LEFT_OBJECT:
-			left = obj;
+			left = value->toObject();
 			step = GET_INDEX_OBJECT;
 			return;
 		case GET_INDEX_OBJECT:
-			index = obj;
+			index = *value;
 			step = DONE;
 			return;
 		default:
@@ -236,9 +233,7 @@ namespace goat {
 		if (left) {
 			left->mark();
 		}
-		if (index) {
-			index->mark();
-		}
+		index.mark();
 	}
 
 	Token * Index::StateAssignImpl::token() {

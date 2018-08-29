@@ -41,16 +41,16 @@ namespace goat {
 			};
 
 			AssignBy *expr;
-			Object *left,
-				*right,
-				*result;
+			Container left,
+				right,
+				result;
 			Step step;
 
 			StateImpl(State *_prev, AssignBy *_expr) :
-				State(_prev), expr(_expr), left(nullptr), right(nullptr), result(nullptr), step(GET_LEFT) {
+				State(_prev), expr(_expr), left(Container::create()), right(Container::create()), result(Container::create()), step(GET_LEFT) {
 			}
 			State *next() override;
-			void ret(Object *obj) override;
+			void ret(Container *value) override;
 			void trace() override;
 			Token * token() override;
 		};

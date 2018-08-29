@@ -40,13 +40,13 @@ namespace goat {
 			};
 
 			For *stmt;
-			Object *condition;
+			Container condition;
 			Step step;
 
 			StateImpl(State *_prev, For *_stmt);
 			State * next() override;
 			State * execute() override;
-			void ret(Object *obj) override;
+			void ret(Container *value) override;
 			void trace() override;
 			Token * token() override;
 		};

@@ -36,7 +36,7 @@ namespace goat {
 
 	State * Void::StateImpl::next() {
 		State *p = prev;
-		p->ret(ObjectVoid::getInstance());
+		p->ret(ObjectVoid::getContainer());
 		delete this;
 		return p;
 	}

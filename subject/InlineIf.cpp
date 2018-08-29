@@ -51,13 +51,18 @@ namespace goat {
 		switch (step) {
 			case CHECK_CONDITION:
 				return expr->condition->createState(this);
-			case EXECUTE:
-				if (condition->toObjectBoolean()->value) {
+			case EXECUTE: {
+				bool condVal;
+				if (!condition.getBoolean(&condVal)) {
+					throw NotImplemented();
+				}
+				if (condVal) {
 					return expr->exprIf->createState(this);
 				}
 				else {
 					return expr->exprElse->createState(this);
 				}
+			}
 			case DONE: {
 				State * p = prev;
 				delete this;
@@ -68,15 +73,15 @@ namespace goat {
 		}
 	}
 
-	void InlineIf::StateImpl::ret(Object *obj) {
+	void InlineIf::StateImpl::ret(Container *value) {
 		switch (step)
 		{
 			case CHECK_CONDITION:
-				condition = obj;
+				condition = *value;
 				step = EXECUTE;
 				return;
 			case EXECUTE:
-				prev->ret(obj);
+				prev->ret(value);
 				step = DONE;
 				return;
 			default:
@@ -85,9 +90,7 @@ namespace goat {
 	}
 
 	void InlineIf::StateImpl::trace() {
-		if (condition) {
-			condition->mark();
-		}
+		condition.mark();
 	}
 
 	String InlineIf::toString() {

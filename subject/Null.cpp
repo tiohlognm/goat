@@ -36,7 +36,7 @@ namespace goat {
 
 	State * Null::StateImpl::next() {
 		State *p = prev;
-		p->ret(ObjectNull::getInstance());
+		p->ret(ObjectNull::getContainer());
 		delete this;
 		return p;
 	}

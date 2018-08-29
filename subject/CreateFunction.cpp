@@ -46,10 +46,12 @@ namespace goat {
 
 	State * CreateFunction::StateImpl::next() {
 		State *p = prev;
+		Container tmp;
 		if (!expr->thread)
-			p->ret(new ObjectFunction(expr->func, scope));
+			tmp = (new ObjectFunction(expr->func, scope))->toContainer();
 		else
-			p->ret(new ObjectThread(expr->func, scope));
+			tmp = (new ObjectThread(expr->func, scope))->toContainer();
+		p->ret(&tmp);
 		delete this;
 		return p;
 	}

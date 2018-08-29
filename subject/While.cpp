@@ -72,8 +72,12 @@ namespace goat {
 		switch (step) {
 		case CHECK_CONDITION:
 			return stmt->expr->createState(this);
-		case EXECUTE:
-			if (condition->toObjectBoolean()->value) {
+		case EXECUTE: {
+			bool condVal;
+			if (!condition.getBoolean(&condVal)) {
+				throw NotImplemented();
+			}
+			if (condVal) {
 				step = CHECK_CONDITION;
 				return stmt->stmt->createState(this);
 			}
@@ -82,15 +86,16 @@ namespace goat {
 				delete this;
 				return p;
 			}
+		}
 		default:
 			throw NotImplemented();
 		}
 	}
 
-	void While::StateImpl::ret(Object *obj) {
+	void While::StateImpl::ret(Container *value) {
 		switch (step) {
 		case CHECK_CONDITION:
-			condition = obj;
+			condition = *value;
 			step = EXECUTE;
 			break;
 		default:
@@ -99,9 +104,7 @@ namespace goat {
 	}
 
 	void While::StateImpl::trace() {
-		if (condition) {
-			condition->mark();
-		}
+		condition.mark();
 	}
 
 	String While::toString() {

@@ -47,7 +47,7 @@ namespace goat {
 			StateImpl(State *_prev, ForIn *_stmt);
 			State * next() override;
 			State * execute() override;
-			void ret(Object *obj) override;
+			void ret(Container *value) override;
 			void trace() override;
 			Token * token() override;
 		};

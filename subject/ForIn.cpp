@@ -104,11 +104,11 @@ namespace goat {
 		}
 	}
 
-	void ForIn::StateImpl::ret(Object *obj) {
+	void ForIn::StateImpl::ret(Container *value) {
 		switch (step) {
 		case GET_OBJECT:
-			if (obj) {
-				obj->enumerate(&vector);
+			if (!value->isPrimitive()) {
+				value->data.obj->enumerate(&vector);
 			}
 			step = EXECUTE;
 			break;

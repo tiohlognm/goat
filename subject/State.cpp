@@ -65,7 +65,7 @@ namespace goat {
 		}
 	}
 
-	void State::ret(Object *obj) {
+	void State::ret(Container *value) {
 		throw NotImplemented();
 	}
 

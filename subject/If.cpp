@@ -51,11 +51,15 @@ namespace goat {
 
 	State * If::StateImpl::next() {
 		if (!executed) {
-			if (!result) {
+			if (result.isEmpty()) {
 				return stmt->expr->createState(this);
 			}
 			executed = true;
-			if (result->toObjectBoolean()->value) {
+			bool resValue;
+			if (!result.getBoolean(&resValue)) {
+				throw NotImplemented();
+			}
+			if (resValue) {
 				return stmt->stmtIf->createState(this);
 			}
 			else if (stmt->stmtElse) {
@@ -72,17 +76,15 @@ namespace goat {
 		}
 	}
 
-	void If::StateImpl::ret(Object *obj) {
-		if (!result) {
-			result = obj;
+	void If::StateImpl::ret(Container *value) {
+		if (result.isEmpty()) {
+			result = *value;
 		}
 		// just ignore the object
 	}
 
 	void If::StateImpl::trace() {
-		if (result) {
-			result->mark();
-		}
+		result.mark();
 	}
 
 	String If::toString() {

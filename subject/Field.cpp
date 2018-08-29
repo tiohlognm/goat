@@ -64,7 +64,7 @@ namespace goat {
 		else {
 			if (field->guard && left->toObjectVoid() != nullptr) {
 				State *p = prev;
-				p->ret(ObjectUndefined::getInstance());
+				p->ret(ObjectUndefined::getContainer());
 				delete this;
 				return p;
 			}
@@ -77,15 +77,15 @@ namespace goat {
 				}
 				State *p = prev;
 				// TODO: review
-				p->ret(left->find(field->nameIndex)->toObject());
+				p->ret(left->find(field->nameIndex));
 				delete this;
 				return p;
 			}
 		}
 	}
 
-	void Field::StateImpl::ret(Object *obj) {
-		left = obj;
+	void Field::StateImpl::ret(Container *value) {
+		left = value->toObject();
 	}
 
 	void Field::StateImpl::trace() {
@@ -113,14 +113,14 @@ namespace goat {
 			executed = true;
 			State *p = prev;
 			left->objects.insert(Object::createIndex(field->name), value);
-			p->ret(value.toObject());
+			p->ret(&value);
 			delete this;
 			return p;
 		}
 	}
 
-	void Field::StateAssignImpl::ret(Object *obj) {
-		left = obj;
+	void Field::StateAssignImpl::ret(Container *value) {
+		left = value->toObject();
 	}
 
 	void Field::StateAssignImpl::trace() {

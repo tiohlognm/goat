@@ -65,8 +65,8 @@ namespace goat {
 		}
 	}
 
-	void BracketExpression::StateImpl::ret(Object *obj) {
-		prev->ret(obj);
+	void BracketExpression::StateImpl::ret(Container *value) {
+		prev->ret(value);
 	}
 
 	String BracketExpression::toString() {
