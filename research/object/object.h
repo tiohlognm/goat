@@ -43,6 +43,7 @@ namespace goat
 		virtual g_object_integer * to_object_integer() const;
 
 		void insert(g_object* key, g_primitive value);
+		g_primitive * find(g_object* key);
 	};
 
 	class g_primitive
@@ -59,6 +60,7 @@ namespace goat
 			return object->to_string(this);
 		}
 
+		void set(g_integer value);
 		static g_primitive create(g_integer value);
 	};
 

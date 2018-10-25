@@ -19,6 +19,14 @@ int main(void)
 	obj0.insert(new g_object_integer(17), g_primitive::create(23));
 	obj0.insert(new g_object_string(L"cccc"), g_primitive::create(13));
 
+	auto p = obj0.find(new g_object_string(L"ddddd"));
+	if (p)
+	{
+		std::wcout << p->to_string() << std::endl;
+		p->set(111);
+	}
+
 	std::wcout << obj0.to_string(nullptr) << std::endl;
+
 	return 0;
 }

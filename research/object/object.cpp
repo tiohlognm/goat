@@ -52,7 +52,23 @@ namespace goat
 		_objects[key] = value;
 	}
 
+	g_primitive * g_object::find(g_object* key)
+	{
+		auto iter = _objects.find(key);
+		if (iter != _objects.end())
+		{
+			return &iter->second;
+		}
+		return nullptr;
+	}
 
+
+
+	void g_primitive::set(g_integer value)
+	{
+		object = g_object_integer_proto::get_instance();
+		data.integer = value;
+	}
 
 	g_primitive g_primitive::create(g_integer value)
 	{
