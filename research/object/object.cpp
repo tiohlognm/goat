@@ -37,6 +37,11 @@ namespace goat
 		return nullptr;
 	}
 
+	g_object_integer * g_object::to_object_integer() const
+	{
+		return nullptr;
+	}
+
 	void g_object::insert(g_object* key, g_primitive value)
 	{
 		_objects[key] = value;

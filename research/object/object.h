@@ -12,6 +12,7 @@ namespace goat
 	class g_primitive;
 
 	class g_object_string;
+	class g_object_integer;
 
 	class g_object_less
 	{
@@ -31,6 +32,7 @@ namespace goat
 		virtual std::wstring to_string(g_primitive *pri) const;
 
 		virtual g_object_string * to_object_string() const;
+		virtual g_object_integer * to_object_integer() const;
 
 		void insert(g_object* key, g_primitive value);
 	};
