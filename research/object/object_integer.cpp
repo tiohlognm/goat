@@ -25,26 +25,14 @@ namespace goat
 		_proto.push_back(g_object_integer_proto::get_instance());
 	}
 
+	g_object_type g_object_integer::type() const
+	{
+		return g_object_type::INTEGER;
+	}
+
 	bool g_object_integer::less(const g_object *object) const
 	{
-		if (object == this)
-		{
-			return false;
-		}
-
-		g_object_string * object_string = object->to_object_string();
-
-		if (object_string != nullptr)
-		{
-			return true;
-		}
-
 		g_object_integer * object_integer = object->to_object_integer();
-
-		if (object_integer == nullptr)
-		{
-			return this < object;
-		}
 
 		return _value < object_integer->_value;
 	}

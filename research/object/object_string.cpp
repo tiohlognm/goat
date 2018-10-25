@@ -20,19 +20,14 @@ namespace goat
 		_proto.push_back(g_object_string_proto::get_instance());
 	}
 
+	g_object_type g_object_string::type() const
+	{
+		return g_object_type::STRING;
+	}
+
 	bool g_object_string::less(const g_object *object) const
 	{
-		if (object == this)
-		{
-			return false;
-		}
-
 		g_object_string * object_string = object->to_object_string();
-
-		if (object_string == nullptr)
-		{
-			return this < object;
-		}
 
 		return _value < object_string->_value;
 	}

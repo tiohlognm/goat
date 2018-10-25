@@ -9,6 +9,11 @@ namespace goat
 	{
 	}
 
+	g_object_type g_object::type() const
+	{
+		return g_object_type::GENERIC;
+	}
+
 	bool g_object::less(const g_object *object) const
 	{
 		return this < object;

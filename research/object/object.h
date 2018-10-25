@@ -20,6 +20,13 @@ namespace goat
 		inline bool operator() (const g_object *a, const g_object *b) const;
 	};
 
+	enum g_object_type
+	{
+		GENERIC,
+		STRING,
+		INTEGER
+	};
+
 	class g_object
 	{
 	protected:
@@ -28,6 +35,7 @@ namespace goat
 
 	public:
 		virtual ~g_object();
+		virtual g_object_type type() const;
 		virtual bool less(const g_object *object) const;
 		virtual std::wstring to_string(g_primitive *pri) const;
 
@@ -56,6 +64,12 @@ namespace goat
 
 	bool g_object_less::operator ()(const g_object *a, const g_object *b) const
 	{
-		return a->less(b);
+		g_object_type x = a->type();
+		g_object_type y = b->type();
+
+		if (x == y)
+			return a->less(b);
+
+		return x < y;
 	}
 }

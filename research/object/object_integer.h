@@ -21,6 +21,7 @@ namespace goat
 
 	public:
 		g_object_integer(g_integer value);
+		g_object_type type() const override;
 		bool less(const g_object *object) const override;
 		std::wstring to_string(g_primitive *pri) const override;
 		g_object_integer * to_object_integer() const override;
