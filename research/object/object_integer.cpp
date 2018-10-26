@@ -17,6 +17,20 @@ namespace goat
 		return std::to_wstring(pri->data.integer);
 	}
 
+	g_primitive g_object_integer_proto::increment(g_primitive *pri) const
+	{
+		g_primitive result = *pri;
+		result.data.integer++;
+		return result;
+	}
+
+	g_primitive g_object_integer_proto::less(g_primitive *left, g_primitive *right) const
+	{
+		g_primitive result;
+		result.set(left->data.integer < right->data.integer);
+		return result;
+	}
+
 
 
 	g_object_integer::g_object_integer(g_integer value)

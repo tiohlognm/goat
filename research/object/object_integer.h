@@ -12,6 +12,8 @@ namespace goat
 	public:
 		static g_object * get_instance();
 		std::wstring to_string(g_primitive *pri) const override;
+		g_primitive increment(g_primitive *pri) const override;
+		g_primitive less(g_primitive *left, g_primitive *right) const override;
 	};
 
 	class g_object_integer : public g_object

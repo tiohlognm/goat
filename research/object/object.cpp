@@ -1,5 +1,6 @@
 #include "object.h"
 #include "object_integer.h"
+#include "object_boolean.h"
 
 #include <sstream>
 
@@ -47,6 +48,20 @@ namespace goat
 		return nullptr;
 	}
 
+	g_primitive g_object::increment(g_primitive *pri) const
+	{
+		g_primitive result;
+		result.set(false);
+		return result;
+	}
+
+	g_primitive g_object::less(g_primitive *left, g_primitive *right) const
+	{
+		g_primitive result;
+		result.set(false);
+		return result;
+	}
+
 	void g_object::insert(g_object* key, g_primitive value)
 	{
 		_objects[key] = value;
@@ -68,6 +83,12 @@ namespace goat
 	{
 		object = g_object_integer_proto::get_instance();
 		data.integer = value;
+	}
+
+	void g_primitive::set(bool value)
+	{
+		object = g_object_boolean_proto::get_instance();
+		data.boolean = value;
 	}
 
 	g_primitive g_primitive::create(g_integer value)

@@ -42,6 +42,9 @@ namespace goat
 		virtual g_object_string * to_object_string() const;
 		virtual g_object_integer * to_object_integer() const;
 
+		virtual g_primitive increment(g_primitive *pri) const;
+		virtual g_primitive less(g_primitive *left, g_primitive *right) const;
+
 		void insert(g_object* key, g_primitive value);
 		g_primitive * find(g_object* key);
 	};
@@ -53,6 +56,7 @@ namespace goat
 		union
 		{
 			g_integer integer;
+			bool boolean;
 		} data;
 
 		std::wstring to_string()
@@ -60,12 +64,26 @@ namespace goat
 			return object->to_string(this);
 		}
 
+		g_primitive increment()
+		{
+			return object->increment(this);
+		}
+
+		g_primitive less(g_primitive *right)
+		{
+			return object->less(this, right);
+		}
+
 		void set(g_integer value);
+		void set(bool value);
 		static g_primitive create(g_integer value);
 	};
 
 	bool g_object_less::operator ()(const g_object *a, const g_object *b) const
 	{
+		if (a == b)
+			return false;
+
 		g_object_type x = a->type();
 		g_object_type y = b->type();
 
