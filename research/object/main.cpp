@@ -45,6 +45,7 @@ int main(void)
 	g_i_if iif;
 	iif.if_true = &load_1;
 
+#if 0
 	g_i_less less;
 	less.next = &iif;
 
@@ -59,6 +60,18 @@ int main(void)
 	store.next = &load_int;
 
 	g_instruction *i = &load_1;
+#else
+
+	g_i_less_integer ili;
+	ili.key = &test_key;
+	ili.next = &iif;
+	ili.value = 100000000;
+
+	store.next = &ili;
+
+	g_instruction *i = &ili;
+
+#endif
 
 	clock_t x = clock();
 

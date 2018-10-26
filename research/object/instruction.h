@@ -70,4 +70,15 @@ namespace goat
 		g_i_if();
 		g_instruction *exec(g_object *scope, std::stack<g_primitive> *stack) override;
 	};
+
+	class g_i_less_integer : public g_instruction
+	{
+	public:
+		g_object *key;
+		g_integer value;
+		g_instruction *next;
+
+		g_i_less_integer();
+		g_instruction *exec(g_object *scope, std::stack<g_primitive> *stack) override;
+	};
 }

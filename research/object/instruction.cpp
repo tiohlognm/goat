@@ -101,4 +101,22 @@ namespace goat
 		else
 			return if_false;
 	}
+
+
+
+	g_i_less_integer::g_i_less_integer()
+		: key(nullptr), value(0), next(nullptr)
+	{
+	}
+
+	g_instruction *g_i_less_integer::exec(g_object *scope, std::stack<g_primitive> *stack)
+	{
+		g_primitive *left = scope->find(key);
+		if (!left)
+			return nullptr;
+		g_primitive right;
+		right.set(value);
+		stack->push(left->less(&right));
+		return next;
+	}
 }
