@@ -13,7 +13,7 @@ namespace goat
 	{
 	}
 
-	g_instruction *g_i_load::exec(g_object *scope, std::stack<g_primitive> *stack)
+	g_instruction *g_i_load::exec(g_object *scope, std::stack<g_primitive, std::vector<g_primitive>> *stack)
 	{
 		g_primitive *value = scope->find(key);
 		if (!value)
@@ -29,7 +29,7 @@ namespace goat
 	{
 	}
 
-	g_instruction *g_i_store::exec(g_object *scope, std::stack<g_primitive> *stack)
+	g_instruction *g_i_store::exec(g_object *scope, std::stack<g_primitive, std::vector<g_primitive>> *stack)
 	{
 		g_primitive value = stack->top();
 		stack->pop();
@@ -44,7 +44,7 @@ namespace goat
 	{
 	}
 
-	g_instruction *g_i_increment::exec(g_object *scope, std::stack<g_primitive> *stack)
+	g_instruction *g_i_increment::exec(g_object *scope, std::stack<g_primitive, std::vector<g_primitive>> *stack)
 	{
 		g_primitive value = stack->top().increment();
 		stack->pop();
@@ -60,7 +60,7 @@ namespace goat
 	{
 	}
 
-	g_instruction *g_i_load_integer::exec(g_object *scope, std::stack<g_primitive> *stack)
+	g_instruction *g_i_load_integer::exec(g_object *scope, std::stack<g_primitive, std::vector<g_primitive>> *stack)
 	{
 		g_primitive pri;
 		pri.set(value);
@@ -75,7 +75,7 @@ namespace goat
 	{
 	}
 
-	g_instruction *g_i_less::exec(g_object *scope, std::stack<g_primitive> *stack)
+	g_instruction *g_i_less::exec(g_object *scope, std::stack<g_primitive, std::vector<g_primitive>> *stack)
 	{
 		g_primitive left = stack->top();
 		stack->pop();
@@ -92,7 +92,7 @@ namespace goat
 	{
 	}
 
-	g_instruction *g_i_if::exec(g_object *scope, std::stack<g_primitive> *stack)
+	g_instruction *g_i_if::exec(g_object *scope, std::stack<g_primitive, std::vector<g_primitive>> *stack)
 	{
 		g_primitive condition = stack->top();
 		stack->pop();
@@ -109,7 +109,7 @@ namespace goat
 	{
 	}
 
-	g_instruction *g_i_less_integer::exec(g_object *scope, std::stack<g_primitive> *stack)
+	g_instruction *g_i_less_integer::exec(g_object *scope, std::stack<g_primitive, std::vector<g_primitive>> *stack)
 	{
 		g_primitive *left = scope->find(key);
 		if (!left)

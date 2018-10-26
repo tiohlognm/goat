@@ -27,7 +27,7 @@ namespace goat
 
 	bool g_object_string::less(const g_object *object) const
 	{
-		g_object_string * object_string = object->to_object_string();
+		g_object_string * object_string = (g_object_string*)object;
 
 		return _value < object_string->_value;
 	}
