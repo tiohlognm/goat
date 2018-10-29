@@ -22,6 +22,7 @@ namespace goat
 
 	enum g_object_type
 	{
+		KEY,
 		GENERIC,
 		STRING,
 		INTEGER
