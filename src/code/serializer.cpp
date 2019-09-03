@@ -349,9 +349,9 @@ namespace g0at
             push_opcode(op::_enter);
         }
 
-        void serializer::visit(_leave *ref)
+        void serializer::visit(___leave *ref)
         {
-            push_opcode(op::_leave);
+            push_opcode(op::___leave);
         }
 
         void serializer::visit(_throw *ref)
@@ -359,9 +359,9 @@ namespace g0at
             push_opcode(op::_throw);
         }
 
-        void serializer::visit(_try *ref)
+        void serializer::visit(___try *ref)
         {
-            push_opcode(op::_try);
+            push_opcode(op::___try);
             push_int32(ref->get_iid().as_int());
         }
 
@@ -371,9 +371,9 @@ namespace g0at
             push_int32(ref->get_id());
         }
 
-        void serializer::visit(_finally *ref)
+        void serializer::visit(___finally *ref)
         {
-            push_opcode(op::_finally);
+            push_opcode(op::___finally);
             push_int32(ref->get_iid().as_int());
         }
 

@@ -79,10 +79,10 @@ namespace g0at
 
             // context
             _enter,
-            _leave,
-            _try,
+            ___leave,
+            ___try,
             _catch,
-            _finally,
+            ___finally,
             _sector,
             _break,
             _cont,

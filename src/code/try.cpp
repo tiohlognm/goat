@@ -26,17 +26,17 @@ namespace g0at
 {
     namespace code
     {
-        _try::_try(iid_t _iid)
+        ___try::___try(iid_t _iid)
             : iid(_iid)
         {
         }
 
-        void _try::accept(instruction_visitor *visitor)
+        void ___try::accept(instruction_visitor *visitor)
         {
             visitor->visit(this);
         }
 
-        void _try::exec(model::thread *thr)
+        void ___try::exec(model::thread *thr)
         {
             model::context *ctx = thr->pool->create_context(thr->ctx);
             ctx->address[0] = iid;

@@ -71,11 +71,11 @@ namespace g0at
             void visit(_insof *ref) override;
             void visit(_array *ref) override;
             void visit(_enter *ref) override;
-            void visit(_leave *ref) override;
+            void visit(___leave *ref) override;
             void visit(_throw *ref) override;
-            void visit(_try *ref) override;
+            void visit(___try *ref) override;
             void visit(_catch *ref) override;
-            void visit(_finally *ref) override;
+            void visit(___finally *ref) override;
             void visit(_inherit *ref) override;
             void visit(_flat *ref) override;
             void visit(_char *ref) override;

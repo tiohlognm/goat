@@ -438,7 +438,7 @@ namespace g0at
 
         void deserializer::c_leave(source *src, code *dst)
         {
-            dst->add_instruction(new _leave());
+            dst->add_instruction(new ___leave());
         }
 
         void deserializer::c_throw(source *src, code *dst)
@@ -449,7 +449,7 @@ namespace g0at
         void deserializer::c_try(source *src, code *dst)
         {
             iid_t iid(pop_int32(src));
-            dst->add_instruction(new _try(iid));
+            dst->add_instruction(new ___try(iid));
         }
 
         void deserializer::c_catch(source *src, code *dst)
@@ -461,7 +461,7 @@ namespace g0at
         void deserializer::c_finally(source *src, code *dst)
         {
             iid_t iid(pop_int32(src));
-            dst->add_instruction(new _finally(iid));
+            dst->add_instruction(new ___finally(iid));
         }
 
         void deserializer::c_inherit(source *src, code *dst)
@@ -684,11 +684,11 @@ namespace g0at
             cc[op::_insof]   = c_insof;
             cc[op::_array]   = c_array;
             cc[op::_enter]   = c_enter;
-            cc[op::_leave]   = c_leave;
+            cc[op::___leave]   = c_leave;
             cc[op::_throw]   = c_throw;
-            cc[op::_try]     = c_try;
+            cc[op::___try]     = c_try;
             cc[op::_catch]   = c_catch;
-            cc[op::_finally] = c_finally;
+            cc[op::___finally] = c_finally;
             cc[op::_inherit] = c_inherit;
             cc[op::_flat]    = c_flat;
             cc[op::_char]    = c_char;

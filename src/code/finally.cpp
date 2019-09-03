@@ -27,17 +27,17 @@ namespace g0at
 {
     namespace code
     {
-        _finally::_finally(iid_t _iid)
+        ___finally::___finally(iid_t _iid)
             : iid(_iid)
         {
         }
 
-        void _finally::accept(instruction_visitor *visitor)
+        void ___finally::accept(instruction_visitor *visitor)
         {
             visitor->visit(this);
         }
 
-        void _finally::exec(model::thread *thr)
+        void ___finally::exec(model::thread *thr)
         {
             assert(iid.valid());
             model::context *ctx = thr->pool->create_context(thr->ctx);

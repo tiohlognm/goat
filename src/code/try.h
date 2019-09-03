@@ -29,10 +29,10 @@ namespace g0at
 {
     namespace code
     {
-        class _try : public instruction
+        class ___try : public instruction
         {
         public:
-            _try(iid_t _iid);
+            ___try(iid_t _iid);
             void accept(instruction_visitor *visitor) override;
             void exec(model::thread *thr) override;
 

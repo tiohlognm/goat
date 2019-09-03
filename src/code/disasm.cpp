@@ -283,7 +283,7 @@ namespace g0at
             stream << L"enter";
         }
 
-        void disasm::visit(_leave *ref)
+        void disasm::visit(___leave *ref)
         {
             stream << L"leave";
         }
@@ -293,7 +293,7 @@ namespace g0at
             stream << L"throw";
         }
 
-        void disasm::visit(_try *ref)
+        void disasm::visit(___try *ref)
         {
             stream << L"try\t^" << ref->get_iid().as_int();
         }
@@ -304,7 +304,7 @@ namespace g0at
             stream << L"catch\t" << id << L"\t; " << identifiers.at(id);
         }
 
-        void disasm::visit(_finally *ref)
+        void disasm::visit(___finally *ref)
         {
             stream << L"finally\t^" << ref->get_iid().as_int();
         }

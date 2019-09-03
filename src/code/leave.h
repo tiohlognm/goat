@@ -28,7 +28,7 @@ namespace g0at
 {
     namespace code
     {
-        class _leave : public instruction
+        class ___leave : public instruction
         {
         public:
             void accept(instruction_visitor *visitor) override;

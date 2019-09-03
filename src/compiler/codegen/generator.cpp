@@ -393,7 +393,7 @@ namespace g0at
             ref->get_statement()->accept(this);
             code->add_instruction(new _jmp(iid_begin));
             if_not->get_iid_ptr().set(code->get_current_iid());
-            code->add_instruction(new _leave());
+            code->add_instruction(new ___leave());
             cycle->get_end_ptr().set(code->get_current_iid());
         }
 
@@ -460,7 +460,7 @@ namespace g0at
             }
             if (has_variables)
             {
-                code->add_instruction(new _leave());
+                code->add_instruction(new ___leave());
             }
         }
 
@@ -510,14 +510,14 @@ namespace g0at
 
             if (stmt_finally)
             {
-                _finally *instr_finally = new _finally(iid_unknown());
+                ___finally *instr_finally = new ___finally(iid_unknown());
                 iid_finally_ptr = instr_finally->get_iid_ptr();
                 code->add_instruction(instr_finally);
             }
 
             if (stmt_catch)
             {
-                _try *instr_try = new _try(iid_unknown());
+                ___try *instr_try = new ___try(iid_unknown());
                 iid_ptr_t iid_catch_ptr = instr_try->get_iid_ptr();
                 code->add_instruction(instr_try);
                 ref->get_stmt_try()->accept(this);
@@ -538,13 +538,13 @@ namespace g0at
                 code->add_instruction(new _enter());
                 ref->get_stmt_try()->accept(this);
             }
-            code->add_instruction(new _leave());
+            code->add_instruction(new ___leave());
 
             if (stmt_finally)
             {
                 iid_finally_ptr.set(code->get_current_iid());
                 stmt_finally->accept(this);
-                code->add_instruction(new _leave());
+                code->add_instruction(new ___leave());
             }
         }
 
@@ -592,7 +592,7 @@ namespace g0at
             {
                 if_not->get_iid_ptr().set(code->get_current_iid());
             }
-            code->add_instruction(new _leave());
+            code->add_instruction(new ___leave());
             cycle->get_end_ptr().set(code->get_current_iid());
         }
 
@@ -671,7 +671,7 @@ namespace g0at
             ref->get_body()->accept(this);
             code->add_instruction(new _jmp(iid_begin));
             if_not->get_iid_ptr().set(code->get_current_iid());
-            code->add_instruction(new _leave());
+            code->add_instruction(new ___leave());
             cycle->get_end_ptr().set(code->get_current_iid());
         }
 
@@ -685,7 +685,7 @@ namespace g0at
             ref->get_expression()->accept(this);
             code->add_instruction(new _bool());
             code->add_instruction(new _if(iid_begin));
-            code->add_instruction(new _leave());
+            code->add_instruction(new ___leave());
             cycle->get_end_ptr().set(code->get_current_iid());
         }
 
@@ -739,7 +739,7 @@ namespace g0at
                     block->get_statement(j)->accept(this);
                 }
             }
-            code->add_instruction(new _leave());
+            code->add_instruction(new ___leave());
             sector->get_begin_ptr().set(code->get_current_iid());
             sector->get_end_ptr().set(code->get_current_iid());
             delete[] pointers;
